@@ -1,0 +1,47 @@
+{% extends "userTemplate.html" %}
+{% block nav %}
+{% if username == currentUser.username %}
+<span><a href="{% url 'index' %}">首页</a></span>
+<span><a id="userInfo" href="javascript:void(0);" onclick="userInfo()">用户资料</a></span>
+<span>博客管理</span>
+<span>评论管理</span>
+<span>草稿箱</span>
+{% else %}
+<span><a href="{% url 'index' %}">首页</a>
+<span>用户资料</span>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<!--<div>
+<h3>用户{{ username }}资料</h3>
+<p>用户名: {{ username }}</p>
+<p>注册时间: {{ registertime|date:"Y-m-d" }}</p>
+<p>生日: {{ birthday|date:"Y-m-d H:i:s" }}</p>
+<p>电子邮件: {{ email }}</p>
+</div>-->
+<div id="content" class="list">
+{% if blogList %}
+	<ul>
+	{% for blog in blogList %}
+		<div class="articlelist">
+		<a href="{% url 'blogs:content' blog.id %}">{{ blog.title }}</a>-<a href="{% url 'users:userIndex' blog.auther.username %}">{{ blog.auther }}</a>
+		<div class="articlelistinfo">
+		<span title="阅读次数">阅读 {{ blog.readcount }}</span>
+		<span title="创建时间">{{ blog.createdate|date:"Y-m-d H:i:s" }}</span>
+		</div>
+		</div>
+	{% endfor %}
+	</ul>
+{% else %}
+	<p>No blogs</p>
+{% endif %}
+</div>
+<script>
+function userInfo()
+{
+    $("#content").load("{% url 'users:userinfo' username %}");
+}
+</script>
+
+{% endblock %}
